@@ -19,14 +19,19 @@ const ThemeToggle = () => {
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       root.classList.toggle("dark", prefersDark);
       localStorage.setItem("theme", "system");
+      (window as any).__setFavicon?.(prefersDark);
 
-      const handler = (e: MediaQueryListEvent) => root.classList.toggle("dark", e.matches);
+      const handler = (e: MediaQueryListEvent) => {
+        root.classList.toggle("dark", e.matches);
+        (window as any).__setFavicon?.(e.matches);
+      };
       const mq = window.matchMedia("(prefers-color-scheme: dark)");
       mq.addEventListener("change", handler);
       return () => mq.removeEventListener("change", handler);
     } else {
       root.classList.toggle("dark", theme === "dark");
       localStorage.setItem("theme", theme);
+      (window as any).__setFavicon?.(theme === "dark");
     }
   }, [theme]);
 

@@ -9,6 +9,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet" />
+  <link rel="icon" id="favicon" type="image/svg+xml" href="/favicon-dark.svg" />
   <title>Sanjay Dharmarajou – Portfolio</title>
   <meta name="description"
     content="Portfolio of Sanjay Dharmarajou – Logic-Driven Coder, Java Developer, Automation & AI Enthusiast" />
@@ -21,8 +22,18 @@
   <meta name="twitter:site" content="@SanjayD11" />
   <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
   <script>
-    // Restore theme before paint to avoid flash
-    (function () { var t = localStorage.getItem('theme') || 'dark'; if (t === 'system') { t = window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light' } document.documentElement.classList.toggle('dark', t === 'dark') })();
+    // Restore theme + set matching favicon before paint
+    (function () {
+      var t = localStorage.getItem('theme') || 'dark';
+      if (t === 'system') { t = window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light' }
+      document.documentElement.classList.toggle('dark', t === 'dark');
+      // Set favicon to match theme
+      window.__setFavicon = function (isDark) {
+        var el = document.getElementById('favicon');
+        if (el) el.href = isDark ? '/favicon-dark.svg' : '/favicon-light.svg';
+      };
+      window.__setFavicon(t === 'dark');
+    })();
   </script>
 </head>
 
