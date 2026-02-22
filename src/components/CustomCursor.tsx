@@ -5,9 +5,8 @@ const CustomCursor = () => {
   const dotRef = useRef<HTMLDivElement>(null);
   const pos = useRef({ x: -100, y: -100 });
   const ringPos = useRef({ x: -100, y: -100 });
-  const hovering = useRef(false);
-  const pressed = useRef(false);
   const raf = useRef(0);
+  const state = useRef<"idle" | "hover" | "press">("idle");
 
   useEffect(() => {
     const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
@@ -20,6 +19,14 @@ const CustomCursor = () => {
     ring.style.display = "block";
     dot.style.display = "block";
 
+    // State-driven class changes (CSS transitions handle size/opacity)
+    const applyState = (s: "idle" | "hover" | "press") => {
+      if (state.current === s) return;
+      state.current = s;
+      ring.dataset.state = s;
+      dot.dataset.state = s;
+    };
+
     const move = (e: MouseEvent) => {
       pos.current.x = e.clientX;
       pos.current.y = e.clientY;
@@ -28,39 +35,25 @@ const CustomCursor = () => {
     const handleOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (target.closest("a, button, [role='button'], input, textarea, select, [data-hoverable]")) {
-        hovering.current = true;
+        if (state.current !== "press") applyState("hover");
       }
     };
 
     const handleOut = () => {
-      hovering.current = false;
+      if (state.current !== "press") applyState("idle");
     };
 
-    const handleDown = () => { pressed.current = true; };
-    const handleUp = () => { pressed.current = false; };
+    const handleDown = () => applyState("press");
+    const handleUp = () => applyState("idle");
 
+    // rAF loop — ONLY updates transform (GPU-only, zero layout cost)
     const loop = () => {
-      // Ring: fast lerp for snappy feel
       const ease = 0.22;
       ringPos.current.x += (pos.current.x - ringPos.current.x) * ease;
       ringPos.current.y += (pos.current.y - ringPos.current.y) * ease;
 
-      // Dynamic ring size based on state
-      const ringSize = pressed.current ? 28 : hovering.current ? 48 : 36;
-      const ringOpacity = pressed.current ? 0.55 : hovering.current ? 0.4 : 0.25;
-      const dotSize = pressed.current ? 5 : hovering.current ? 9 : 7;
-      const rHalf = ringSize / 2;
-      const dHalf = dotSize / 2;
-
-      ring.style.width = `${ringSize}px`;
-      ring.style.height = `${ringSize}px`;
-      ring.style.opacity = `${ringOpacity}`;
-      ring.style.transform = `translate3d(${ringPos.current.x - rHalf}px, ${ringPos.current.y - rHalf}px, 0)`;
-
-      // Dot: instant — zero lag
-      dot.style.width = `${dotSize}px`;
-      dot.style.height = `${dotSize}px`;
-      dot.style.transform = `translate3d(${pos.current.x - dHalf}px, ${pos.current.y - dHalf}px, 0)`;
+      ring.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0)`;
+      dot.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)`;
 
       raf.current = requestAnimationFrame(loop);
     };
@@ -85,42 +78,17 @@ const CustomCursor = () => {
 
   return (
     <>
-      {/* Ring — follows with smooth ease */}
+      {/* Ring — follows with smooth ease, size/opacity via CSS transitions */}
       <div
         ref={ringRef}
-        style={{
-          display: "none",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: 9999,
-          pointerEvents: "none",
-          width: 36,
-          height: 36,
-          opacity: 0.25,
-          borderRadius: "50%",
-          border: "1.5px solid hsl(var(--primary) / 0.35)",
-          background: "radial-gradient(circle, hsl(var(--primary) / 0.06) 0%, transparent 70%)",
-          willChange: "transform",
-        }}
+        className="cursor-ring"
+        data-state="idle"
       />
       {/* Dot — instant, precise */}
       <div
         ref={dotRef}
-        style={{
-          display: "none",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: 10000,
-          pointerEvents: "none",
-          width: 7,
-          height: 7,
-          borderRadius: "50%",
-          background: "hsl(var(--primary))",
-          boxShadow: "0 0 8px hsl(var(--primary) / 0.45)",
-          willChange: "transform",
-        }}
+        className="cursor-dot"
+        data-state="idle"
       />
     </>
   );
