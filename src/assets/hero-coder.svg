@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="400" y2="400">
+      <stop offset="0%" stop-color="hsl(230,80%,25%)" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="hsl(265,70%,30%)" stop-opacity="0.1"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="hsl(228,25%,12%)"/>
+      <stop offset="100%" stop-color="hsl(228,25%,8%)"/>
+    </linearGradient>
+    <linearGradient id="code1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="hsl(230,80%,65%)"/>
+      <stop offset="100%" stop-color="hsl(265,70%,68%)"/>
+    </linearGradient>
+  </defs>
+  <!-- Glow circle -->
+  <circle cx="200" cy="200" r="160" fill="url(#bg)" opacity="0.5"/>
+  <!-- Laptop body -->
+  <rect x="90" y="120" width="220" height="150" rx="10" fill="hsl(228,22%,14%)" stroke="hsl(228,18%,22%)" stroke-width="1.5"/>
+  <!-- Screen -->
+  <rect x="100" y="130" width="200" height="125" rx="4" fill="url(#screen)"/>
+  <!-- Code lines -->
+  <rect x="115" y="148" width="70" height="4" rx="2" fill="url(#code1)" opacity="0.8"/>
+  <rect x="115" y="160" width="100" height="4" rx="2" fill="hsl(230,80%,65%)" opacity="0.4"/>
+  <rect x="115" y="172" width="55" height="4" rx="2" fill="hsl(265,70%,68%)" opacity="0.6"/>
+  <rect x="115" y="184" width="85" height="4" rx="2" fill="url(#code1)" opacity="0.5"/>
+  <rect x="115" y="196" width="40" height="4" rx="2" fill="hsl(230,80%,65%)" opacity="0.3"/>
+  <rect x="115" y="208" width="75" height="4" rx="2" fill="hsl(265,70%,68%)" opacity="0.5"/>
+  <rect x="115" y="220" width="60" height="4" rx="2" fill="url(#code1)" opacity="0.4"/>
+  <!-- Cursor blink -->
+  <rect x="115" y="232" width="2" height="10" rx="1" fill="hsl(230,80%,65%)" opacity="0.9"/>
+  <!-- Laptop base -->
+  <path d="M70 270 L90 270 L95 280 L305 280 L310 270 L330 270 L320 290 L80 290 Z" fill="hsl(228,22%,14%)" stroke="hsl(228,18%,22%)" stroke-width="1"/>
+  <!-- Keyboard dots -->
+  <rect x="130" y="273" width="140" height="3" rx="1.5" fill="hsl(228,18%,20%)"/>
+  <!-- Floating particles -->
+  <circle cx="320" cy="140" r="3" fill="hsl(230,80%,65%)" opacity="0.3"/>
+  <circle cx="75" cy="170" r="2" fill="hsl(265,70%,68%)" opacity="0.25"/>
+  <circle cx="340" cy="200" r="2.5" fill="hsl(230,80%,65%)" opacity="0.2"/>
+  <circle cx="60" cy="230" r="2" fill="hsl(265,70%,68%)" opacity="0.15"/>
+</svg>
