@@ -9,6 +9,10 @@
 </p>
 
 <p align="center">
+  <a href="https://sanjayd.vercel.app">🌐 Live Site</a> · <a href="https://github.com/SanjayD11">GitHub</a> · <a href="https://www.linkedin.com/in/sanjay-d-354776353">LinkedIn</a> · <a href="mailto:sanjayraju5164@gmail.com">Email</a>
+</p>
+
+<p align="center">
   <a href="https://reactjs.org"><img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white&style=for-the-badge" alt="React 18" /></a>
   <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white&style=for-the-badge" alt="TypeScript 5" /></a>
   <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white&style=for-the-badge" alt="Tailwind CSS" /></a>
@@ -140,10 +144,11 @@ npm run dev
 
 ## 📬 Contact
 
-Have a question or want to collaborate? Reach out through the [contact form](https://sanjay-portfolio.vercel.app/#contact) on the live site, or connect with me directly:
+Have a question or want to collaborate? Reach out through the [contact form](https://sanjayd.vercel.app/#contact) on the live site, or connect with me directly:
 
 - **GitHub** — [@SanjayD11](https://github.com/SanjayD11)
-- **Twitter** — [@SanjayD11](https://twitter.com/SanjayD11)
+- **LinkedIn** — [Sanjay D](https://www.linkedin.com/in/sanjay-d-354776353)
+- **Email** — [sanjayraju5164@gmail.com](mailto:sanjayraju5164@gmail.com)
 
 <br/>
 
