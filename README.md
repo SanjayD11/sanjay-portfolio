@@ -1,73 +1,154 @@
-# Welcome to your Lovable project
+<p align="center">
+  <img src="public/favicon-dark.svg" alt="Logo" width="60" />
+</p>
 
-## Project info
+<h1 align="center">Sanjay Dharmarajou — Portfolio</h1>
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+<p align="center">
+  <strong>Logic-Driven Coder · Java Developer · Automation & AI Enthusiast</strong>
+</p>
 
-## How can I edit this code?
+<p align="center">
+  <a href="https://reactjs.org"><img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white&style=for-the-badge" alt="React 18" /></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white&style=for-the-badge" alt="TypeScript 5" /></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white&style=for-the-badge" alt="Tailwind CSS" /></a>
+  <a href="https://vitejs.dev"><img src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white&style=for-the-badge" alt="Vite 5" /></a>
+  <a href="https://www.framer.com/motion/"><img src="https://img.shields.io/badge/Framer_Motion-12-0055FF?logo=framer&logoColor=white&style=for-the-badge" alt="Framer Motion" /></a>
+</p>
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+A modern, performance-first developer portfolio built from the ground up with **React**, **TypeScript**, and **Tailwind CSS**. Designed to showcase my projects, skills, and experience through rich animations, glassmorphism aesthetics, and a fully responsive layout that adapts beautifully across every screen size.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+<br/>
 
-Changes made via Lovable will be committed automatically to this repo.
+## ✨ Highlights
 
-**Use your preferred IDE**
+| Feature | Details |
+|---|---|
+| **Animated Hero** | Typewriter effect cycling through roles, floating illustration, staggered entrance animations |
+| **Glassmorphism UI** | Frosted-glass cards and surfaces with dynamic backdrop filters |
+| **Dark / Light Theme** | System-aware toggle with theme-matched favicons, persisted in `localStorage` |
+| **Custom Cursor** | GPU-accelerated custom cursor with interactive hover states |
+| **Scroll Animations** | Section-reveal transitions, scroll progress bar, and smooth scroll-to-top |
+| **Animated Background** | Particle-like animated canvas behind content for depth |
+| **Project Showcase** | Filterable project grid with detailed modals, architecture diagrams, and live/source links |
+| **AI & Automation** | Dedicated section highlighting AI/ML projects and automation workflows |
+| **Certifications** | Interactive cards with verification links and issuing details |
+| **Contact Form** | Fully functional contact form powered by **EmailJS** — no backend required |
+| **Loading Screen** | Branded preloader with crossfade transition into the main content |
+| **SEO Optimized** | Open Graph tags, semantic HTML, proper heading hierarchy, and `robots.txt` |
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+<br/>
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🏗️ Architecture
 
-Follow these steps:
+```
+sanjay-portfolio/
+├── public/                  # Static assets & favicons
+├── src/
+│   ├── assets/              # Images, GIFs, media
+│   ├── components/          # 22 custom components + shadcn/ui primitives
+│   │   ├── ui/              # Reusable UI primitives (49 components)
+│   │   ├── HeroSection.tsx
+│   │   ├── AboutSection.tsx
+│   │   ├── SkillsSection.tsx
+│   │   ├── TechnicalExcellenceSection.tsx
+│   │   ├── ProjectsSection.tsx
+│   │   ├── AISection.tsx
+│   │   ├── CertificationsSection.tsx
+│   │   ├── EducationSection.tsx
+│   │   ├── ContactSection.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── CustomCursor.tsx
+│   │   ├── AnimatedBackground.tsx
+│   │   ├── LoadingScreen.tsx
+│   │   └── ...
+│   ├── hooks/               # Custom React hooks
+│   ├── lib/                 # Utility functions
+│   ├── pages/               # Route-level page components
+│   └── test/                # Unit & integration tests
+├── index.html               # Entry HTML with theme + favicon bootstrapping
+├── tailwind.config.ts       # Extended design tokens & animations
+├── vite.config.ts           # Vite build configuration
+└── vitest.config.ts         # Test runner configuration
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+<br/>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🛠️ Tech Stack
 
-# Step 3: Install the necessary dependencies.
-npm i
+| Layer | Technology |
+|---|---|
+| **Framework** | React 18 with TypeScript |
+| **Build Tool** | Vite 5 (SWC for fast HMR) |
+| **Styling** | Tailwind CSS 3 + CSS custom properties |
+| **UI Primitives** | Radix UI + shadcn/ui |
+| **Animations** | Framer Motion 12, CSS keyframes, GPU-accelerated transforms |
+| **Routing** | React Router v6 |
+| **State & Data** | TanStack React Query |
+| **Forms** | React Hook Form + Zod validation |
+| **Email** | EmailJS (client-side contact form) |
+| **Charts** | Recharts |
+| **Icons** | Lucide React |
+| **Testing** | Vitest + React Testing Library |
+| **Linting** | ESLint 9 with flat config |
+| **Fonts** | Space Grotesk · JetBrains Mono (Google Fonts) |
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+<br/>
+
+## 🚀 Getting Started
+
+> **Prerequisites:** [Node.js](https://nodejs.org/) v18+ and npm
+
+```bash
+# 1 · Clone the repository
+git clone https://github.com/SanjayD11/sanjay-portfolio.git
+
+# 2 · Navigate into the project
+cd sanjay-portfolio
+
+# 3 · Install dependencies
+npm install
+
+# 4 · Start the dev server (opens at http://localhost:5173)
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Other Scripts
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+| Command | Description |
+|---|---|
+| `npm run build` | Production build to `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint across the codebase |
+| `npm run test` | Run unit tests with Vitest |
+| `npm run test:watch` | Run tests in watch mode |
 
-**Use GitHub Codespaces**
+<br/>
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🎨 Design Philosophy
 
-## What technologies are used for this project?
+- **Performance-first rendering** — Hero section is pre-mounted behind the loader and crossfades in with zero layout shift.  
+- **GPU-accelerated animations** — All transforms use `translateZ(0)` and `will-change` hints for buttery-smooth 60 fps transitions.  
+- **Accessible by default** — Semantic HTML, ARIA labels, keyboard navigation, and prefers-reduced-motion support.  
+- **Theme continuity** — An inline script in `<head>` restores the theme *before* first paint to eliminate flash-of-unstyled-content.  
+- **Modular architecture** — Every section is a self-contained component with its own data, styles, and animations.
 
-This project is built with:
+<br/>
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📬 Contact
 
-## How can I deploy this project?
+Have a question or want to collaborate? Reach out through the [contact form](https://sanjay-portfolio.vercel.app/#contact) on the live site, or connect with me directly:
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+- **GitHub** — [@SanjayD11](https://github.com/SanjayD11)
+- **Twitter** — [@SanjayD11](https://twitter.com/SanjayD11)
 
-## Can I connect a custom domain to my Lovable project?
+<br/>
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+<p align="center">
+  Engineered with ♥ and precision by <strong>Sanjay Dharmarajou</strong>
+</p>
