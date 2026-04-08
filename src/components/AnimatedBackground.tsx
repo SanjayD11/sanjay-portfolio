@@ -12,7 +12,7 @@ const codeSnippets = [
 const AnimatedBackground = memo(() => {
   return (
     <div
-      className="fixed -inset-[50vh] pointer-events-none"
+      className="fixed inset-0 pointer-events-none"
       style={{ zIndex: 1 }}
       aria-hidden="true"
     >
@@ -29,7 +29,6 @@ const AnimatedBackground = memo(() => {
           top: "-10%", left: "-10%",
           animation: "bloom-drift-1 22s ease-in-out infinite",
           transform: "translateZ(0)",
-          willChange: "transform, opacity",
         }}
       />
       {/* ── Soft light bloom 2 — accent (bottom-right) ──────────────────── */}
@@ -42,7 +41,6 @@ const AnimatedBackground = memo(() => {
           bottom: "-10%", right: "-10%",
           animation: "bloom-drift-2 28s ease-in-out infinite",
           transform: "translateZ(0)",
-          willChange: "transform, opacity",
         }}
       />
       {/* ── Soft light bloom 3 — mixed (center) ─────────────────────────── */}
@@ -55,7 +53,6 @@ const AnimatedBackground = memo(() => {
           top: "40%", left: "45%",
           animation: "bloom-drift-3 35s ease-in-out infinite",
           transform: "translateZ(0)",
-          willChange: "transform, opacity",
         }}
       />
 
