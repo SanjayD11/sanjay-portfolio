@@ -191,10 +191,11 @@ const ProjectDetailModal = ({ project, onClose }: Props) => {
             
             {/* Scrollable Diagram Canvas */}
             <div 
-              className="flex-1 overflow-auto bg-background/50 relative" 
-              style={{ WebkitOverflowScrolling: "touch" }}
+              className="flex-1 overflow-auto bg-background/50 relative hide-scroll" 
+              style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}
             >
-              <div className="w-max h-max min-w-[1200px] lg:min-w-[1400px] min-h-[700px] flex items-center justify-center mx-auto p-8 sm:p-16 relative">
+              <style>{`.hide-scroll::-webkit-scrollbar { display: none !important; }`}</style>
+              <div className="w-max h-max min-w-[840px] flex items-center justify-center mx-auto p-4 sm:p-12 relative transition-transform duration-300">
                 {project.diagram}
               </div>
             </div>

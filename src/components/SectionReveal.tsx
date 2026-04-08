@@ -25,7 +25,7 @@ const SectionReveal = ({ children, className = "", delay = 0 }: SectionRevealPro
           observer.unobserve(el);
         }
       },
-      { threshold: 0.08, rootMargin: "-40px 0px" }
+      { threshold: 0, rootMargin: "250px 0px" }
     );
 
     observer.observe(el);
