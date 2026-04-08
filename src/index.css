@@ -113,11 +113,13 @@
 
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    /* overflow-x: hidden intentionally removed to fix mobile address-bar paint glitch */
   }
 
   body {
-    overflow-x: hidden;
+    /* overflow-x: clip used instead of hidden to preserve native scroll context */
+    overflow-x: clip;
+    max-width: 100vw;
   }
 
   ::selection {

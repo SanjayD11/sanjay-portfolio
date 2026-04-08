@@ -56,10 +56,11 @@ const ProjectDetailModal = ({ project, onClose }: Props) => {
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600');
         :root { ${cssVars} }
         svg { 
-          background-color: hsl(var(--card) / 0.1); 
           font-family: 'Space Grotesk', sans-serif;
         }
       </style>
+      <!-- Guaranteed solid background plate for standalone image viewing -->
+      <rect width="100%" height="100%" fill="hsl(var(--background))" />
     `;
     
     // Safely inject right after the opening <svg> tag
