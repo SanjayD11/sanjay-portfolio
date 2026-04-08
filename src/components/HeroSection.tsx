@@ -44,7 +44,7 @@ const HeroSection = ({ ready = true }: { ready?: boolean }) => {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center section-padding overflow-hidden"
+      className="relative min-h-[100svh] lg:min-h-screen flex items-center justify-center section-padding overflow-hidden"
     >
       <div
         className="max-w-5xl mx-auto z-10 flex flex-col lg:flex-row items-center gap-8 lg:gap-12"
