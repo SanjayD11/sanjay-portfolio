@@ -138,6 +138,13 @@
     background: hsl(var(--primary) / 0.3);
     border-radius: 3px;
   }
+
+  /* Global icon stabilization — nukes the 1px 'stutter' on hover transforms */
+  svg {
+    image-rendering: -webkit-optimize-contrast;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
 }
 
 @layer components {
@@ -1032,7 +1039,9 @@ h1:hover:has(.hero-name-glow)::after {
     box-shadow 0.35s ease,
     background-color 0.3s ease,
     border-color 0.3s ease;
-  will-change: transform;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .social-icon-btn:hover .social-icon-circle {

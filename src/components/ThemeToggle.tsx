@@ -46,8 +46,8 @@ const ThemeToggle = () => {
     <motion.button
       onClick={cycle}
       className="p-2 rounded-full hover:bg-secondary/50 text-muted-foreground hover:text-foreground transition-colors"
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
+      whileHover={{ scale: 1.1, rotate: 5, translateZ: 0 }}
+      whileTap={{ scale: 0.9, translateZ: 0 }}
       title={`Theme: ${theme}`}
     >
       <AnimatePresence mode="wait">

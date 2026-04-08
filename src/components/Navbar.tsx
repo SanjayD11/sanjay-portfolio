@@ -136,7 +136,6 @@ const Navbar = () => {
               opacity: pillStyle.opacity,
               transform: `translateX(${pillStyle.left}px) translateZ(0)`,
               transition: "transform 0.35s cubic-bezier(0.22,1,0.36,1), width 0.3s cubic-bezier(0.22,1,0.36,1), opacity 0.25s ease",
-              willChange: "transform",
             }}
             aria-hidden="true"
           />
