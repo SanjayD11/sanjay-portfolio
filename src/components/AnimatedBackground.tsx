@@ -13,7 +13,7 @@ const AnimatedBackground = memo(() => {
   return (
     <div
       className="fixed inset-0 pointer-events-none"
-      style={{ zIndex: 1, overflow: "hidden", contain: "strict" }}
+      style={{ zIndex: 1 }}
       aria-hidden="true"
     >
       {/* ── Animated diagonal background gradient ─────────────────────────── */}
