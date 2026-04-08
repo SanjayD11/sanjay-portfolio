@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Github, ExternalLink } from "lucide-react";
-import { useEffect } from "react";
+import { X, Github, ExternalLink, Maximize2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export interface ProjectDetail {
   title: string;
@@ -21,11 +21,14 @@ interface Props {
 }
 
 const ProjectDetailModal = ({ project, onClose }: Props) => {
+  const [isFullscreenDiagram, setIsFullscreenDiagram] = useState(false);
+
   useEffect(() => {
     if (project) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
+      setIsFullscreenDiagram(false);
     }
     return () => { document.body.style.overflow = ""; };
   }, [project]);
@@ -39,8 +42,9 @@ const ProjectDetailModal = ({ project, onClose }: Props) => {
   }, [onClose]);
 
   return (
-    <AnimatePresence>
-      {project && (
+    <>
+      <AnimatePresence>
+        {project && (
         <motion.div
           key="modal-backdrop"
           initial={{ opacity: 0 }}
@@ -58,6 +62,7 @@ const ProjectDetailModal = ({ project, onClose }: Props) => {
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             className="relative w-full max-w-3xl glass-strong rounded-2xl p-6 sm:p-8 my-auto"
+            style={{ willChange: "transform, opacity" }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
@@ -100,8 +105,16 @@ const ProjectDetailModal = ({ project, onClose }: Props) => {
 
               {/* Architecture Diagram */}
               <div>
-                <h3 className="text-base font-semibold text-foreground mb-3">Architecture</h3>
-                <div className="overflow-x-auto">{project.diagram}</div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-base font-semibold text-foreground">Architecture</h3>
+                  <button 
+                    onClick={() => setIsFullscreenDiagram(true)}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:scale-105 active:scale-95 transition-all"
+                  >
+                    <Maximize2 size={12} /> View Full
+                  </button>
+                </div>
+                <div className="overflow-x-auto overflow-y-hidden">{project.diagram}</div>
               </div>
 
               <div>
@@ -142,6 +155,54 @@ const ProjectDetailModal = ({ project, onClose }: Props) => {
         </motion.div>
       )}
     </AnimatePresence>
+
+    {/* Fullscreen Diagram Overlay */}
+    <AnimatePresence>
+      {isFullscreenDiagram && project && (
+        <motion.div
+          key="fullscreen-diagram"
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="fixed inset-0 z-[200] flex items-center justify-center p-2 sm:p-6"
+          style={{ background: "hsl(var(--background) / 0.95)", backdropFilter: "blur(24px)", willChange: "opacity, transform" }}
+        >
+          <div 
+            className="relative w-full h-full max-w-[95vw] sm:max-w-7xl max-h-screen flex flex-col glass-strong shadow-2xl border border-border/40 rounded-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="p-4 flex justify-between items-center border-b border-border/20 bg-background/80 z-10 backdrop-blur-md">
+              <div>
+                <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                  <Maximize2 size={16} className="text-primary" /> {project.title} Architecture
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5 hidden sm:block">Scroll to explore details</p>
+              </div>
+              <button
+                onClick={() => setIsFullscreenDiagram(false)}
+                className="p-2 sm:px-4 sm:py-2 flex items-center gap-2 rounded-full bg-secondary/80 hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+              >
+                <span className="hidden sm:inline font-medium text-sm">Close Viewer</span>
+                <X size={20} />
+              </button>
+            </div>
+            
+            {/* Scrollable Diagram Canvas */}
+            <div 
+              className="flex-1 overflow-auto bg-background/50 relative" 
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
+              <div className="w-max h-max min-w-[1200px] lg:min-w-[1400px] min-h-[700px] flex items-center justify-center mx-auto p-8 sm:p-16 relative">
+                {project.diagram}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   );
 };
 

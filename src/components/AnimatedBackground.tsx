@@ -23,45 +23,39 @@ const AnimatedBackground = memo(() => {
       <div
         className="absolute rounded-full"
         style={{
-          width: 500,
-          height: 500,
-          background: "hsl(var(--primary))",
-          opacity: 0.09,
-          filter: "blur(80px)",
-          top: "5%",
-          left: "10%",
+          width: "120vw", height: "120vw", maxWidth: 600, maxHeight: 600,
+          background: "radial-gradient(circle, hsl(var(--primary)) 0%, transparent 60%)",
+          opacity: 0.12,
+          top: "-10%", left: "-10%",
           animation: "bloom-drift-1 22s ease-in-out infinite",
           transform: "translateZ(0)",
+          willChange: "transform, opacity",
         }}
       />
       {/* ── Soft light bloom 2 — accent (bottom-right) ──────────────────── */}
       <div
         className="absolute rounded-full"
         style={{
-          width: 380,
-          height: 380,
-          background: "hsl(var(--accent))",
-          opacity: 0.08,
-          filter: "blur(70px)",
-          bottom: "10%",
-          right: "8%",
+          width: "100vw", height: "100vw", maxWidth: 500, maxHeight: 500,
+          background: "radial-gradient(circle, hsl(var(--accent)) 0%, transparent 60%)",
+          opacity: 0.1,
+          bottom: "-10%", right: "-10%",
           animation: "bloom-drift-2 28s ease-in-out infinite",
           transform: "translateZ(0)",
+          willChange: "transform, opacity",
         }}
       />
       {/* ── Soft light bloom 3 — mixed (center) ─────────────────────────── */}
       <div
         className="absolute rounded-full"
         style={{
-          width: 320,
-          height: 320,
-          background: "linear-gradient(135deg, hsl(var(--primary) / 0.7), hsl(var(--accent) / 0.5))",
-          opacity: 0.06,
-          filter: "blur(60px)",
-          top: "40%",
-          left: "45%",
+          width: "80vw", height: "80vw", maxWidth: 400, maxHeight: 400,
+          background: "radial-gradient(circle, hsl(var(--primary)) 0%, hsl(var(--accent)) 40%, transparent 70%)",
+          opacity: 0.08,
+          top: "40%", left: "45%",
           animation: "bloom-drift-3 35s ease-in-out infinite",
           transform: "translateZ(0)",
+          willChange: "transform, opacity",
         }}
       />
 
