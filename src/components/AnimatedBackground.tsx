@@ -27,7 +27,6 @@ const AnimatedBackground = memo(() => {
           background: "radial-gradient(circle, hsl(var(--primary)) 0%, transparent 60%)",
           opacity: 0.12,
           top: "-10%", left: "-10%",
-          animation: "bloom-drift-1 22s ease-in-out infinite",
           transform: "translateZ(0)",
         }}
       />
@@ -39,7 +38,6 @@ const AnimatedBackground = memo(() => {
           background: "radial-gradient(circle, hsl(var(--accent)) 0%, transparent 60%)",
           opacity: 0.1,
           bottom: "-10%", right: "-10%",
-          animation: "bloom-drift-2 28s ease-in-out infinite",
           transform: "translateZ(0)",
         }}
       />
@@ -51,7 +49,6 @@ const AnimatedBackground = memo(() => {
           background: "radial-gradient(circle, hsl(var(--primary)) 0%, hsl(var(--accent)) 40%, transparent 70%)",
           opacity: 0.08,
           top: "40%", left: "45%",
-          animation: "bloom-drift-3 35s ease-in-out infinite",
           transform: "translateZ(0)",
         }}
       />
