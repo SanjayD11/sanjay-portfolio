@@ -42,7 +42,29 @@ const ProjectDetailModal = ({ project, onClose }: Props) => {
       svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     }
     
-    const svgData = new XMLSerializer().serializeToString(svgEl);
+    let svgData = new XMLSerializer().serializeToString(svgEl);
+    
+    // The SVGs use CSS variables (hsl(var(--primary))). A standalone blob viewer drops inheritance.
+    // We dynamically grab the exact current mode colors and embed them as a raw style element.
+    const rootStyles = getComputedStyle(document.documentElement);
+    const cssVars = ['--card', '--border', '--accent', '--foreground', '--muted-foreground', '--primary', '--background']
+      .map(v => `${v}: ${rootStyles.getPropertyValue(v).trim()};`)
+      .join(' ');
+      
+    const styleInjection = `
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600');
+        :root { ${cssVars} }
+        svg { 
+          background-color: hsl(var(--card) / 0.1); 
+          font-family: 'Space Grotesk', sans-serif;
+        }
+      </style>
+    `;
+    
+    // Safely inject right after the opening <svg> tag
+    svgData = svgData.replace(/(<svg[^>]*>)/i, `$1${styleInjection}`);
+
     const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
     const url = URL.createObjectURL(svgBlob);
     
