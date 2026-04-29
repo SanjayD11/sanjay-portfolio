@@ -11,7 +11,7 @@ const PUBLIC_KEY = "fHveuQYI0JLBzpeYl";
 const socialLinks = [
   { icon: Github, href: "https://github.com/SanjayD11", label: "GitHub", color: "265 65% 58%" },
   { icon: Linkedin, href: "https://www.linkedin.com/in/sanjay-d-354776353", label: "LinkedIn", color: "210 80% 55%" },
-  { icon: Mail, href: "mailto:contact@sanjayd.dev", label: "Email", color: "340 70% 55%" },
+  { icon: Mail, href: "mailto:sanjayraju5164@gmail.com", label: "Email", color: "340 70% 55%" },
   { icon: Phone, href: "tel:+918668192874", label: "+91 8668192874", color: "145 60% 45%" },
 ];
 

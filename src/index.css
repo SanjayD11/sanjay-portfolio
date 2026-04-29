@@ -139,11 +139,18 @@
     border-radius: 3px;
   }
 
-  /* Global icon stabilization — nukes the 1px 'stutter' on hover transforms */
+  /* Global icon stabilization — nukes the 1px 'stutter' on hover transforms.
+   * Only promote non-interactive SVGs; interactive containers (social-icon-circle)
+   * manage their own GPU layer via will-change: transform to avoid stacking conflicts. */
   svg {
     image-rendering: -webkit-optimize-contrast;
-    transform: translateZ(0);
+    /* Do NOT set transform here globally — it creates a new stacking context that
+     * interferes with parent-level translateY hover transforms causing visible stutter.
+     * Individual interactive elements promote their own layers via will-change. */
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* Prevent sub-pixel anti-aliasing shifts */
+    -webkit-font-smoothing: antialiased;
   }
 }
 
@@ -1035,17 +1042,23 @@ h1:hover:has(.hero-name-glow)::after {
   box-shadow:
     0 4px 16px -2px hsl(var(--icon-hue, var(--primary)) / 0.08),
     0 1px 4px hsl(0 0% 0% / 0.04);
+  /* will-change: transform elevates to its own compositor layer so the hover
+   * translateY doesn't trigger a pixel-snapping stutter on every frame. */
+  will-change: transform;
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 0.35s ease,
     background-color 0.3s ease,
     border-color 0.3s ease;
-  transform: translateZ(0);
+  /* Stable resting position on its own GPU layer */
+  transform: translateY(0) translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  /* Contain the hover animation to avoid triggering ancestor repaints */
+  contain: layout style;
 }
 
 .social-icon-btn:hover .social-icon-circle {
-  transform: translateY(-4px) scale(1.08);
+  transform: translateY(-4px) scale(1.08) translateZ(0);
   background: hsl(var(--icon-hue, var(--primary)) / 0.14);
   border-color: hsl(var(--icon-hue, var(--primary)) / 0.25);
   box-shadow:
@@ -1054,7 +1067,7 @@ h1:hover:has(.hero-name-glow)::after {
 }
 
 .social-icon-btn:active .social-icon-circle {
-  transform: translateY(-1px) scale(1.02);
+  transform: translateY(-1px) scale(1.02) translateZ(0);
 }
 
 .dark .social-icon-circle {
@@ -1083,4 +1096,79 @@ h1:hover:has(.hero-name-glow)::after {
 
 .social-icon-btn:hover .social-icon-label {
   color: hsl(var(--icon-hue, var(--primary)));
+}
+
+/* ─── Mobile & Tablet Performance Optimizations ──────────────────────────── */
+
+/*
+ * On touch / mobile screens:
+ * 1. Remove backdrop-filter from the contact form so the keyboard-open
+ *    repaint doesn't cause a jarring glitch-flash.
+ * 2. Reduce GPU-heavy blur on nav to cut compositor load.
+ * 3. Disable non-essential animations to eliminate scroll jank.
+ * 4. Disable hover-state icon transforms (touch has no real hover).
+ * 5. Add touch-action hints for native-feel scroll.
+ */
+@media (max-width: 1024px) {
+  /* Contact form: remove backdrop-filter to prevent iOS keyboard glitch */
+  #contact .glass {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: hsl(var(--card) / 0.92) !important;
+  }
+
+  .dark #contact .glass {
+    background: hsl(var(--card) / 0.85) !important;
+  }
+
+  /* Reduce nav blur to lighten GPU load on mobile */
+  .nav-glass {
+    backdrop-filter: blur(8px) saturate(1.3) !important;
+    -webkit-backdrop-filter: blur(8px) saturate(1.3) !important;
+  }
+
+  .mobile-menu-glass {
+    backdrop-filter: blur(8px) saturate(1.4) !important;
+    -webkit-backdrop-filter: blur(8px) saturate(1.4) !important;
+  }
+
+  /* Disable animated background snippets on mobile to prevent scroll jank */
+  .bg-snippet-anim {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+  /* Social icon circles: disable hover transforms on touch
+   * (touch devices fire a fake hover that causes a stuck translateY) */
+  .social-icon-btn .social-icon-circle {
+    will-change: auto;
+    contain: none;
+  }
+
+  /* Ensure smooth native scroll on touch */
+  html, body {
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  /* Prevent input zoom on iOS (font-size must be >= 16px) */
+  #contact input,
+  #contact textarea {
+    font-size: 16px !important;
+    /* Prevent layout shift when keyboard opens by anchoring the element */
+    transform: translateZ(0);
+  }
+
+  /* Reduce hero float animation intensity to save GPU on mobile */
+  @keyframes hero-float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-4px); }
+  }
+}
+
+/* Extra-small screens: disable the hero float entirely to avoid jank */
+@media (max-width: 640px) {
+  @keyframes hero-float {
+    0%, 100% { transform: translateY(0); }
+  }
 }
