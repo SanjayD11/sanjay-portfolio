@@ -1183,25 +1183,40 @@ h1:hover:has(.hero-name-glow)::after {
   }
 
   /*
-   * CTA buttons (View Projects / Download Resume / Contact Me):
-   * On touch devices, Tailwind hover:-translate-y-0.5 fires a fake sticky
-   * hover after the first tap and stays stuck — laggy and misaligned.
-   * Kill the hover-lift on touch; use a press-down :active scale instead.
+   * CTA buttons on touch devices:
+   * - Disable the Tailwind hover:-translate-y lift (it gets sticky on touch)
+   * - Re-enable the shimmer, but trigger it on :active (tap) not :hover
+   * - The shimmer uses transform:translateX() → pure GPU, zero layout cost
+   * - A @keyframes animation drives the sweep so it plays through a quick tap
    */
   .btn-shine {
+    /* Lock vertical position — no hover lift on touch */
     transform: translateZ(0) !important;
     will-change: auto;
   }
 
-  /* Disable the shine sweep on touch (can get stuck mid-sweep) */
+  /* Keep the shimmer element visible (it's already GPU-composited) */
   .btn-shine::after {
-    display: none !important;
+    /* Reset to parked position, animation will drive it */
+    transform: translateX(-200%) skewX(-20deg) !important;
+    /* No transition on touch — the @keyframes takes over on :active */
+    transition: none !important;
   }
 
-  /* Satisfying press-down on tap */
+  /* On tap: play the shimmer sweep as a one-shot keyframe animation */
+  .btn-shine:active::after {
+    animation: touch-shimmer-sweep 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  }
+
+  /* Satisfying press-down scale on tap */
   .btn-shine:active {
-    transform: scale(0.96) translateZ(0) !important;
-    transition: transform 0.12s ease !important;
+    transform: scale(0.97) translateZ(0) !important;
+    transition: transform 0.1s ease !important;
+  }
+
+  @keyframes touch-shimmer-sweep {
+    0%   { transform: translateX(-200%) skewX(-20deg); }
+    100% { transform: translateX(400%)  skewX(-20deg); }
   }
 }
 
