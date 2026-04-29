@@ -308,24 +308,36 @@
   .btn-shine {
     position: relative;
     overflow: hidden;
+    /* Promote to GPU compositor layer so child pseudo-element transforms are cheap */
+    will-change: transform;
+    /* Stable resting translateZ to open a compositing layer */
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 
-  /* The shine pseudo-element: positioned offscreen to the left */
+  /*
+   * The shine pseudo-element.
+   * CRITICAL FIX: Previously used `left: -110% → left: 110%` which is a
+   * LAYOUT property — forces a reflow on every animation frame → massive jank.
+   * Now uses `transform: translateX()` which is GPU-composited (zero reflow).
+   */
   .btn-shine::after {
     content: '';
     position: absolute;
     top: -10%;
-    left: -110%;
+    /* Park it off the left edge using translate so `left` is never animated */
+    left: 0;
     width: 60%;
     height: 120%;
-    transform: skewX(-20deg);
-    /* Dark mode: white gloss | Light mode: dark glass sheen — toggled via custom property */
+    /* translateX(-200%) puts it fully off-screen to the left */
+    transform: translateX(-200%) skewX(-20deg);
     background: linear-gradient(90deg,
         transparent,
         var(--btn-shine-color, hsl(0 0% 100% / 0.18)),
         transparent);
-    /* Transition drives BOTH the entry and the exit (reverse) */
-    transition: left 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    /* GPU-only transition: only transform changes, zero layout cost */
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
   }
 
@@ -339,10 +351,15 @@
     --btn-shine-color: hsl(0 0% 100% / 0.18);
   }
 
-  /* On hover → slide in */
-  .btn-shine:hover::after,
-  .btn-shine:focus-visible::after {
-    left: 110%;
+  /*
+   * On hover → slide in: translateX(400%) moves it fully across the button.
+   * Only fires on real pointer devices (mouse), NOT on touch via hover:hover.
+   */
+  @media (hover: hover) and (pointer: fine) {
+    .btn-shine:hover::after,
+    .btn-shine:focus-visible::after {
+      transform: translateX(400%) skewX(-20deg);
+    }
   }
 
   /* On leave (no hover) → slide back out (the transition handles the reverse) */
@@ -1164,11 +1181,50 @@ h1:hover:has(.hero-name-glow)::after {
     0%, 100% { transform: translateY(0); }
     50%       { transform: translateY(-4px); }
   }
+
+  /*
+   * CTA buttons (View Projects / Download Resume / Contact Me):
+   * On touch devices, Tailwind hover:-translate-y-0.5 fires a fake sticky
+   * hover after the first tap and stays stuck — laggy and misaligned.
+   * Kill the hover-lift on touch; use a press-down :active scale instead.
+   */
+  .btn-shine {
+    transform: translateZ(0) !important;
+    will-change: auto;
+  }
+
+  /* Disable the shine sweep on touch (can get stuck mid-sweep) */
+  .btn-shine::after {
+    display: none !important;
+  }
+
+  /* Satisfying press-down on tap */
+  .btn-shine:active {
+    transform: scale(0.96) translateZ(0) !important;
+    transition: transform 0.12s ease !important;
+  }
 }
 
 /* Extra-small screens: disable the hero float entirely to avoid jank */
 @media (max-width: 640px) {
   @keyframes hero-float {
     0%, 100% { transform: translateY(0); }
+  }
+}
+
+/*
+ * Desktop-only hover effects for CTA buttons.
+ * (hover: hover) and (pointer: fine) = real mouse/trackpad only,
+ * never touch screens — so sticky-hover glitch cannot happen.
+ */
+@media (hover: hover) and (pointer: fine) {
+  .btn-shine:hover {
+    transform: translateY(-2px) translateZ(0) !important;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+
+  .btn-shine:active {
+    transform: translateY(0) scale(0.98) translateZ(0) !important;
+    transition: transform 0.1s ease !important;
   }
 }
