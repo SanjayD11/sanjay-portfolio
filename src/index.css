@@ -1183,40 +1183,79 @@ h1:hover:has(.hero-name-glow)::after {
   }
 
   /*
-   * CTA buttons on touch devices:
-   * - Disable the Tailwind hover:-translate-y lift (it gets sticky on touch)
-   * - Re-enable the shimmer, but trigger it on :active (tap) not :hover
-   * - The shimmer uses transform:translateX() → pure GPU, zero layout cost
-   * - A @keyframes animation drives the sweep so it plays through a quick tap
+   * CTA buttons on touch devices — premium radial ripple tap effect:
+   *
+   * Layer 1 (::before): A radial glow ripple bursts from the button center,
+   *   expands and fades — uses only transform + opacity (pure GPU compositor,
+   *   zero layout cost). Theme-aware via CSS custom properties.
+   *
+   * Layer 2 (::after): The diagonal shimmer is hidden on touch to avoid
+   *   mid-sweep stuck states. The ripple replaces it as the primary effect.
+   *
+   * The combination is: ripple bloom + gentle press-down scale.
+   * Feels native, premium, and fluid on both iOS and Android.
    */
+
+  /* Lock vertical position — kill the Tailwind sticky hover lift on touch */
   .btn-shine {
-    /* Lock vertical position — no hover lift on touch */
     transform: translateZ(0) !important;
     will-change: auto;
   }
 
-  /* Keep the shimmer element visible (it's already GPU-composited) */
+  /* Ripple origin layer — parked at scale(0), invisible at rest */
+  .btn-shine::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Large enough circle to cover any button size */
+    width: 220%;
+    height: 500%;
+    border-radius: 50%;
+    /*
+     * Radial gradient so the glow is bright at center and fades out —
+     * works on both dark and light themes since it uses the primary hue.
+     */
+    background: radial-gradient(
+      circle,
+      hsl(var(--primary) / 0.30) 0%,
+      hsl(var(--primary) / 0.10) 40%,
+      transparent 70%
+    );
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    pointer-events: none;
+    /* GPU-only properties: transform + opacity */
+    will-change: transform, opacity;
+  }
+
+  /* Hide the diagonal shimmer sweep on touch (replaced by ripple) */
   .btn-shine::after {
-    /* Reset to parked position, animation will drive it */
-    transform: translateX(-200%) skewX(-20deg) !important;
-    /* No transition on touch — the @keyframes takes over on :active */
-    transition: none !important;
+    display: none !important;
   }
 
-  /* On tap: play the shimmer sweep as a one-shot keyframe animation */
-  .btn-shine:active::after {
-    animation: touch-shimmer-sweep 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
-  }
-
-  /* Satisfying press-down scale on tap */
+  /*
+   * On tap: press-down scale + trigger the ripple bloom.
+   * scale(0.97) gives a tactile "press" feel, then snaps back on release.
+   */
   .btn-shine:active {
     transform: scale(0.97) translateZ(0) !important;
-    transition: transform 0.1s ease !important;
+    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
 
-  @keyframes touch-shimmer-sweep {
-    0%   { transform: translateX(-200%) skewX(-20deg); }
-    100% { transform: translateX(400%)  skewX(-20deg); }
+  .btn-shine:active::before {
+    animation: touch-ripple-bloom 0.55s cubic-bezier(0.2, 0, 0.4, 1) forwards !important;
+  }
+
+  /*
+   * Ripple keyframes: scale from 0 → 1.1 while fading opacity 0.9 → 0.
+   * Only transforms transform + opacity (both compositor-thread only).
+   * The slight overshoot to 1.1 gives a natural elastic feel.
+   */
+  @keyframes touch-ripple-bloom {
+    0%   { transform: translate(-50%, -50%) scale(0);   opacity: 0.9; }
+    60%  { transform: translate(-50%, -50%) scale(0.9); opacity: 0.55; }
+    100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
   }
 }
 
