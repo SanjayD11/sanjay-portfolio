@@ -43,25 +43,60 @@ const ThemeToggle = () => {
   const Icon = icons[theme];
 
   return (
-    <motion.button
+    <button
       onClick={cycle}
-      className="p-2 rounded-full hover:bg-secondary/50 text-muted-foreground hover:text-foreground transition-colors"
-      whileHover={{ scale: 1.1, rotate: 5, translateZ: 0 }}
-      whileTap={{ scale: 0.9, translateZ: 0 }}
       title={`Theme: ${theme}`}
+      style={{
+        /*
+         * FIX: Replaced Framer Motion whileHover (scale+rotate) with CSS-only
+         * transitions. The rotate: 5 on a fixed element inside the navbar was
+         * causing sub-pixel GPU layer conflicts, producing left-to-right stutter.
+         * Pure CSS transitions run on the compositor thread with zero jank.
+         */
+        padding: "0.5rem",
+        borderRadius: "9999px",
+        background: "transparent",
+        border: "none",
+        cursor: "pointer",
+        color: "hsl(var(--muted-foreground))",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "background-color 0.2s ease, color 0.2s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1)",
+        // Stable resting layer — prevents position shift when hover promotes it
+        transform: "translateZ(0)",
+        willChange: "transform",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.backgroundColor = "hsl(var(--secondary) / 0.5)";
+        (e.currentTarget as HTMLButtonElement).style.color = "hsl(var(--foreground))";
+        (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.08) translateZ(0)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.backgroundColor = "transparent";
+        (e.currentTarget as HTMLButtonElement).style.color = "hsl(var(--muted-foreground))";
+        (e.currentTarget as HTMLButtonElement).style.transform = "scale(1) translateZ(0)";
+      }}
+      onMouseDown={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.transform = "scale(0.92) translateZ(0)";
+      }}
+      onMouseUp={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.08) translateZ(0)";
+      }}
     >
       <AnimatePresence mode="wait">
         <motion.div
           key={theme}
-          initial={{ rotate: -90, opacity: 0 }}
-          animate={{ rotate: 0, opacity: 1 }}
-          exit={{ rotate: 90, opacity: 0 }}
-          transition={{ duration: 0.15 }}
+          initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
+          animate={{ rotate: 0, opacity: 1, scale: 1 }}
+          exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
         >
           <Icon size={16} />
         </motion.div>
       </AnimatePresence>
-    </motion.button>
+    </button>
   );
 };
 

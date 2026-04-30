@@ -409,6 +409,35 @@
     box-shadow: 0 0 18px hsl(var(--primary) / 0.2);
   }
 
+  /*
+   * Nav icon buttons (GitHub, LinkedIn).
+   * CRITICAL: Pre-promote to a compositor layer at rest via translateZ(0).
+   * Without this, the hover background-color change triggers a layer promotion
+   * mid-animation, causing the visible left-to-right pixel-snap stutter.
+   * With translateZ(0) already set, the compositor layer exists before hover
+   * so there's no promotion event — the background just fades in smoothly.
+   */
+  .nav-icon-btn {
+    /* Resting state: on its own compositor layer, ready for hover */
+    transform: translateZ(0);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .nav-icon-btn:hover {
+      background-color: hsl(var(--secondary) / 0.5);
+      color: hsl(var(--foreground));
+      transform: scale(1.08) translateZ(0);
+    }
+
+    .nav-icon-btn:active {
+      transform: scale(0.92) translateZ(0);
+    }
+  }
+
   /* Hero tech badge hover — subtle lift + glow */
   .tech-badge-hover {
     transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
@@ -429,7 +458,9 @@
     background: hsl(var(--primary) / 0.1);
   }
 
-  /* Nav link hover effect */
+  /* Nav link hover underline — GPU-only scaleX (no layout reflow, no stutter)
+   * Uses scaleX instead of width so the browser composites it on the GPU thread.
+   * transform-origin: center means it expands symmetrically from the middle. */
   .nav-link-hover {
     position: relative;
   }
@@ -438,16 +469,21 @@
     content: '';
     position: absolute;
     bottom: 2px;
-    left: 50%;
-    width: 0;
+    left: 15%;
+    /* Fixed width at 70% of link — scaleX animates it, not width */
+    width: 70%;
     height: 1.5px;
     background: hsl(var(--primary) / 0.5);
-    transform: translateX(-50%);
-    transition: width 0.25s ease;
+    /* Start collapsed, expand from center */
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .nav-link-hover:hover::after {
-    width: 60%;
+  @media (hover: hover) and (pointer: fine) {
+    .nav-link-hover:hover::after {
+      transform: scaleX(1);
+    }
   }
 
   @keyframes page-bg-shift {

@@ -17,13 +17,19 @@ const Navbar = () => {
   const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 });
   const navLinksRef = useRef<HTMLDivElement>(null);
   const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
-  const [mounted, setMounted] = useState(false);
 
+  // ── Entrance animation: only drives opacity, not transform ──────────────
+  // We keep translateX(-50%) always fixed. A separate CSS class handles the
+  // fade-in so the entrance never fights with the stable position transform.
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    requestAnimationFrame(() => setMounted(true));
+    // One rAF ensures the initial opacity:0 frame is painted before we
+    // flip to opacity:1, giving a clean fade-in without layout thrash.
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
   }, []);
 
-  // IntersectionObserver for scrollspy
+  // ── IntersectionObserver for scrollspy ─────────────────────────────────
   useEffect(() => {
     const ids = links.map((l) => l.href.slice(1));
     const observer = new IntersectionObserver(
@@ -45,7 +51,7 @@ const Navbar = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Pill position calculation
+  // ── Pill position calculation ───────────────────────────────────────────
   const updatePill = useCallback(() => {
     const target = hovered ?? active;
     if (!target || !navLinksRef.current) {
@@ -75,7 +81,7 @@ const Navbar = () => {
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
-  // Lock body scroll when mobile menu is open
+  // ── Lock body scroll when mobile menu is open ──────────────────────────
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
@@ -90,9 +96,22 @@ const Navbar = () => {
       <nav
         className="fixed top-4 left-1/2 z-50 nav-glass rounded-full flex items-center gap-1 nav-capsule-shadow"
         style={{
-          transform: `translateX(-50%) translateY(${mounted ? "0" : "-80px"})`,
+          /*
+           * CRITICAL FIX: translateX(-50%) is the ONLY positional transform.
+           * Previously, translateY was also in this string which meant any
+           * re-render touching `mounted` could re-trigger the entrance slide.
+           * Now the entrance is purely opacity-driven (see .nav-enter-* classes)
+           * and the position transform is rock-solid: always translateX(-50%).
+           */
+          transform: "translateX(-50%)",
           opacity: mounted ? 1 : 0,
-          transition: "transform 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.5s ease",
+          /*
+           * Only transition opacity for entrance/exit. NO transform transition
+           * here — that was the root cause of the "navbar slides up on scroll"
+           * bug because any transform state change (even pill position reads)
+           * would trigger this transition on the nav element itself.
+           */
+          transition: "opacity 0.5s ease",
           width: "auto",
           maxWidth: "min(92vw, 720px)",
           boxSizing: "border-box",
@@ -107,7 +126,7 @@ const Navbar = () => {
           href="https://github.com/SanjayD11"
           target="_blank"
           rel="noopener noreferrer"
-          className="p-1.5 rounded-full hover:bg-secondary/50 text-muted-foreground hover:text-foreground transition-colors shrink-0"
+          className="p-1.5 rounded-full text-muted-foreground shrink-0 nav-icon-btn"
           aria-label="GitHub"
         >
           <Github size={15} />
@@ -116,7 +135,7 @@ const Navbar = () => {
           href="https://www.linkedin.com/in/sanjay-d-354776353"
           target="_blank"
           rel="noopener noreferrer"
-          className="p-1.5 rounded-full hover:bg-secondary/50 text-muted-foreground hover:text-foreground transition-colors shrink-0"
+          className="p-1.5 rounded-full text-muted-foreground shrink-0 nav-icon-btn"
           aria-label="LinkedIn"
         >
           <Linkedin size={15} />
@@ -151,14 +170,17 @@ const Navbar = () => {
                   if (el) linkRefs.current.set(link.href.slice(1), el);
                 }}
                 onMouseEnter={() => setHovered(link.href.slice(1))}
-                className="relative px-3 py-1.5 text-sm rounded-full z-10 select-none nav-link-hover"
+                className="relative px-3 py-1.5 text-sm rounded-full z-10 select-none"
                 style={{
                   color:
                     isActive || isHovered
                       ? "hsl(var(--primary))"
                       : "hsl(var(--muted-foreground))",
                   fontWeight: isActive ? 600 : 400,
-                  transition: "color 0.25s ease, font-weight 0.2s ease",
+                  transition: "color 0.25s ease",
+                  // Stabilize each link on its own layer so the pill sliding
+                  // beneath it never causes a pixel-snap stutter on the text.
+                  transform: "translateZ(0)",
                 }}
               >
                 {link.label}

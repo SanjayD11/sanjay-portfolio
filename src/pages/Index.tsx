@@ -47,8 +47,9 @@ const Index = () => {
         <LoadingScreen onComplete={handleLoadComplete} />
       )}
 
-      {/* Navbar OUTSIDE transformed container — position:fixed needs viewport as containing block */}
+      {/* Navbar + ScrollProgress OUTSIDE transformed container — position:fixed needs viewport as containing block */}
       <Navbar />
+      <ScrollProgress />
 
       {/* Hero + all sections — ALWAYS mounted, hidden behind loader initially */}
       <div
@@ -56,10 +57,8 @@ const Index = () => {
         style={{
           opacity: loading ? 0 : 1,
           transition: "opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
-          willChange: loading ? "opacity" : "auto",
         }}
       >
-        <ScrollProgress />
         <AnimatedBackground />
         <HeroSection ready={!loading} />
         <AboutSection />
